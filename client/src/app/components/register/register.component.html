@@ -1,3 +1,17 @@
-<p>
-  register works!
-</p>
+<form (submit)="catchSubmit()">
+  <h2>About you</h2>
+  <label for="firstname">Firstname <span *ngIf="formError.firstname.error" [innerHTML]="formError.firstname.message"></span></label>
+  <input type="text" name="firstname" [(ngModel)]="formData.firstname">
+
+  <label for="lastname">Lastname <span *ngIf="formError.lastname.error" [innerHTML]="formError.lastname.message"></span></label>
+  <input type="text" name="lastname" [(ngModel)]="formData.lastname">
+
+  <h2>Login information</h2>
+  <label for="email">Email <span *ngIf="formError.email.error" [innerHTML]="formError.email.message"></span></label>
+  <input type="email" name="email" [(ngModel)]="formData.email" (focus)="formError.email.error = false">
+
+  <label for="password">Password <span *ngIf="formError.password.error" [innerHTML]="formError.password.message"></span></label>
+  <input type="password" name="password" [(ngModel)]="formData.password" (focus)="formError.password.error = false">
+
+  <button type="submit">Register</button>
+</form>

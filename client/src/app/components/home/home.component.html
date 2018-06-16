@@ -1,3 +1,12 @@
-<p>
-  home works!
-</p>
+<p>Login or register to start tapping</p>
+<section>
+    <article>
+        <a (click)="login = !login;register = !register;">Login</a>
+        <app-login *ngIf="login"></app-login>
+    </article>
+
+    <article>
+        <a (click)="register = !register;login = !login;">Register</a>
+        <app-register *ngIf="register"></app-register>
+    </article>
+</section>

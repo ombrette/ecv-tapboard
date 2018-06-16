@@ -25,7 +25,7 @@ router.post('/signup', function(req, res) {
       lastname: req.body.lastname
     });
     // save the user
-    newUser.save(function(err) {
+    newUser.save(function(err, user) {
       if (err) {
         return res.json({success: false, msg: 'Username already exists.'});
       }
@@ -34,7 +34,8 @@ router.post('/signup', function(req, res) {
       res.json({
         success: true,
         msg: 'Successful created new user.',
-        token: 'JWT ' + token
+        token: 'JWT ' + token, 
+        user: user
       });
     });
   }
@@ -55,7 +56,7 @@ router.post('/signin', function(req, res) {
           // if user is found and password is right create a token
           var token = jwt.sign(user.toJSON(), config.secret);
           // return the information including token as JSON
-          res.json({success: true, token: 'JWT ' + token});
+          res.json({success: true, token: 'JWT ' + token, user: user});
         } else {
           res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
         }
