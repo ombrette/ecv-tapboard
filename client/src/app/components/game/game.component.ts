@@ -10,12 +10,11 @@ import { Headers, Http, RequestOptions } from '@angular/http';
 export class GameComponent implements OnInit {
 
   score: number
+  onclick: boolean
 
   constructor(private http: Http, private router: Router) {
+    this.onclick = false;
     this.score = 0
-  }
-
-  public playGame = () => {
   }
 
   saveScore = () => {
