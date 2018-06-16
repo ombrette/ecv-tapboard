@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Headers, Http, RequestOptions } from '@angular/http';
 
 @Component({
   selector: 'app-game',
@@ -7,7 +9,32 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GameComponent implements OnInit {
 
-  constructor() { }
+  score: number
+
+  constructor(private http: Http, private router: Router) {
+    this.score = 0
+  }
+
+  public playGame = () => {
+  }
+
+  saveScore = () => {
+    const token = localStorage.getItem('token');
+    var user = localStorage.getItem('user');
+
+    const headers = new Headers({'Authorization': token});
+    const options = new RequestOptions({ headers: headers });
+
+    this.http.post('http://localhost:8080/api/tap', {
+      score: this.score,
+      user
+    }, options)
+    .toPromise()
+    .then((user: any) => {
+      this.router.navigate(['tap']);
+    });
+  }
+
 
   ngOnInit() {
   }

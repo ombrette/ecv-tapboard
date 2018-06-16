@@ -78,11 +78,12 @@ export class LoginComponent implements OnInit {
     this.http.post('http://localhost:8080/api/signin', {
       email,
       password
-    }, options)
+    })
     .toPromise()
     .then((user: any) => {
+      user = JSON.parse(user._body);
       localStorage.setItem('token', user.token)
-      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('user', user.username)
       this.router.navigate(['me']);
     });
   }

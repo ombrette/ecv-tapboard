@@ -1,3 +1,10 @@
-<p>
-  game works!
-</p>
+<section>
+  <article (click)="playGame()">
+    <img src="assets/images/tapOn.png" alt="" [ngClass]="on ? 'show' : 'hide'">
+    <img src="assets/images/tapOff.png" alt="" [ngClass]="on ? 'hide' : 'show'">
+  </article>
+  <div>
+    <aside [ngClass]="{ 'started': hasStarted }">
+    </aside>
+  </div>
+</section>

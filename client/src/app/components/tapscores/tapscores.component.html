@@ -1,3 +1,14 @@
-<p>
-  tapscores works!
-</p>
+<section>
+    <h1>Score table</h1>
+    <p>Here is the list of scores</p>
+    <article>
+        <button routerLink="/me" routerLinkActive="true">Play</button>
+        <button (click)="logout()">Logout</button>
+    </article>
+    <ul>
+        <li *ngFor="let score of scores">
+            <b>{{ score.score }}pts</b>
+            <span>{{ score.username }}</span>
+        </li>
+    </ul>
+</section>

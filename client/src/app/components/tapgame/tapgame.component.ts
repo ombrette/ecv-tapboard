@@ -21,6 +21,7 @@ export class TapgameComponent implements OnInit {
   }
 
   logout = () => {
+    localStorage.removeItem('user');
     localStorage.removeItem('token')
     this.router.navigate((['']))
   }

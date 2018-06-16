@@ -8,6 +8,7 @@ var config = require('../config/database');
 require('../config/passport')(passport);
 
 var User = require("../models/user");
+var Tap = require("../models/tap");
 
 // Configuration de la route principale => http://localhost:8080/api/
 router.get('/', (req, res, next) => {
@@ -35,7 +36,7 @@ router.post('/signup', function(req, res) {
         success: true,
         msg: 'Successful created new user.',
         token: 'JWT ' + token, 
-        user: user
+        username: user.firstname
       });
     });
   }
@@ -56,7 +57,8 @@ router.post('/signin', function(req, res) {
           // if user is found and password is right create a token
           var token = jwt.sign(user.toJSON(), config.secret);
           // return the information including token as JSON
-          res.json({success: true, token: 'JWT ' + token, user: user});
+          res.json({success: true, token: 'JWT ' + token, username: user.firstname});
+          console.log(user.firstname);
         } else {
           res.status(401).send({success: false, msg: 'Authentication failed. Wrong password.'});
         }
@@ -64,6 +66,62 @@ router.post('/signin', function(req, res) {
     }
   });
 });
+
+router.post('/tap', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    if (!req.body.score || !req.body.username) {
+      res.json({success: false, msg: 'Please pass username and score.'});
+    } else {
+      var newTap = new Tap({
+        score: req.body.score,
+        username: req.body.username
+      });
+      // save the user
+      newTap.save(function(err, tap) {
+        if (err) {
+          return res.json({success: false, msg: 'Save tap failed.'});
+        }
+        res.json({
+          success: true,
+          msg: 'Successful created new tap.'
+        });
+      });
+    }
+  } else {
+    return res.status(401).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+router.get('/scores', passport.authenticate('jwt', { session: false}), function(req, res) {
+  var token = getToken(req.headers);
+  if (token) {
+    Tap.find(function(err, scores) {
+      if (err) throw err;
+
+      if (!scores) {
+        res.status(404).send({success: false, msg: 'Scores not found.'});
+      } else {
+        res.json({success: true, scores: scores});
+      }
+    });
+  } else {
+    return res.status(401).send({success: false, msg: 'Unauthorized.'});
+  }
+});
+
+getToken = function (headers) {
+  if (headers && headers.authorization) {
+    var parted = headers.authorization.split(' ');
+    if (parted.length === 2) {
+      return parted[1];
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
 
 // Export du module
 module.exports = router;

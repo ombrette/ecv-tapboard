@@ -105,8 +105,9 @@ export class RegisterComponent implements OnInit {
     }, options)
     .toPromise()
     .then((user: any) => {
+      user = JSON.parse(user._body);
       localStorage.setItem('token', user.token)
-      localStorage.setItem('user', JSON.stringify(user))
+      localStorage.setItem('user', user.username)
       this.router.navigate(['me']);
     });
   }
